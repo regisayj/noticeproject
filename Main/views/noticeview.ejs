@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>게시판</h1>
+<tr>
+    <td>조회수</td>
+    <td>제목</td>
+    <td>글쓴이</td>
+    <td>작성일</td>    
+</tr>   
+    <%
+    for(var i =0; i<data.length; i++){
+
+        var l = i;
+    %>
+    <tr>
+            <li><a href="/contentspage"value="<%= data[l].title %>"> 
+            <%= data[l].title %> 
+    </tr>        
+    <%}%>
+    <br>
+    <br>
+    <br>
+    <a href="/">목록</a>
+    <a href="/write">작성하기</a>
+
+
+
+    
+</body>
+</html>
