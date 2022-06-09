@@ -130,7 +130,6 @@ app.post('/login',(req,res)=>{
                 });
             });
 
-
         }else{
             console.log('로그인 실패');
             res.redirect('/');
@@ -149,7 +148,6 @@ app.get('/logout',(req,res)=>{
 
 });
 
-
 //게시글 조회
 app.get('/noticeview',(req,res)=>{
     
@@ -157,10 +155,10 @@ app.get('/noticeview',(req,res)=>{
     const body = req.body;
     const title = body.title;
     const contents = body.contents;
-    
+
     client.query('select * from notice.insert',(err,data) =>{
 
-        req.session.name = body.name;
+        req.session.name = data.name;
         req.session.title = data.title;
         req.session.contents = data.contents;
         req.session.regdate = data.regdate;
@@ -171,6 +169,7 @@ app.get('/noticeview',(req,res)=>{
                 title : data.title,
                 contents : data.contents,
                 regdata : data.regdate,
+                name : data.name,
                 data : data
             });
 
@@ -182,6 +181,7 @@ app.get('/noticeview',(req,res)=>{
 
 app.get('/write',(req,res)=>{
     console.log('게시글작성 페이지');
+    console.log(req.get);
     res.render('write');
     
 });
@@ -193,6 +193,17 @@ app.get('/contentspage',(req,res)=>{
     const body = req.body;
     const title = body.title;
     const contents = body.contents;
+
+    if(req.session.is_logined == true){
+        res.render('contentspage',{
+            is_logined : req.session.is_logined,
+            name : req.session.name
+        });
+    }else{
+        res.render('contentspage',{
+            is_logined : false
+        });
+    }
 
     client.query('select * from notice.insert where title=?',(err,data) =>{
 
@@ -209,14 +220,11 @@ app.get('/contentspage',(req,res)=>{
                 regdata : data.regdate,
                 data : data
             });
-
+            
             console.log(data);
 
             })     
         })
-
-
-    
 });
 
 //게시글 작성
@@ -226,15 +234,17 @@ app.post('/insert',(req,res)=>{
     const body = req.body;
     const title = body.title;
     const contents = body.contents;
+    const writer = body.writer;
     
     console.log(title);
     console.log(contents);
+    console.log(writer);
 
     client.query('select * from notice.insert where title=?',[title],(err,data) =>{
         if(data.length == 0){
             console.log('게시글 작성 완료');
-            client.query('insert into notice.insert(title, contents) values(?,?)',[
-                title, contents
+            client.query('insert into notice.insert(title, contents, writer) values(?,?,?)',[
+                title, contents, writer
             ]);
 
             res.redirect('/noticeview');
