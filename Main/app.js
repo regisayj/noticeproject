@@ -172,10 +172,12 @@ app.get('/noticeview',(req,res)=>{
                 name : data.name,
                 data : data
             });
-
+            
             console.log(data);
 
-            })     
+            })
+            
+            
         })
     })
 
@@ -184,47 +186,6 @@ app.get('/write',(req,res)=>{
     console.log(req.get);
     res.render('write');
     
-});
-
-app.get('/contentspage',(req,res)=>{
-
-    console.log('게시글 조회');
-
-    const body = req.body;
-    const title = body.title;
-    const contents = body.contents;
-
-    if(req.session.is_logined == true){
-        res.render('contentspage',{
-            is_logined : req.session.is_logined,
-            name : req.session.name
-        });
-    }else{
-        res.render('contentspage',{
-            is_logined : false
-        });
-    }
-
-    client.query('select * from notice.insert where title=?',(err,data) =>{
-
-        req.session.name = body.name;
-        req.session.title = data.title;
-        req.session.contents = data.contents;
-        req.session.regdate = data.regdate;
-        req.session.data = data;
-
-        req.session.save(function(){ // 세션 스토어에 적용하는 작업
-            res.render('contentspage',{ // 정보전달
-                title : data.title,
-                contents : data.contents,
-                regdata : data.regdate,
-                data : data
-            });
-            
-            console.log(data);
-
-            })     
-        })
 });
 
 //게시글 작성
@@ -253,7 +214,40 @@ app.post('/insert',(req,res)=>{
     })
 })
 
+app.get('/contentspage',(req,res)=>{
 
+    console.log('게시글 조회');
+
+    const body = req.body;
+    const title = body.title;
+    const contents = body.contents;
+    const writer = body.writer;
+
+    console.log(title);
+    console.log(contents);
+
+    client.query('select * from notice.insert where title=?',[title],(err,data) =>{
+
+        req.session.title = data.title;
+        req.session.contents = data.contents;
+        req.session.regdate = data.regdate;
+        req.session.data = data;
+
+        req.session.save(function(){ // 세션 스토어에 적용하는 작업
+            res.render('contentspage',{ // 정보전달
+                title : data.title,
+                contents : data.contents,
+                regdata : data.regdate,
+                data : data
+            });
+            
+            console.log(data);
+
+            })     
+        })
+
+
+});
 
 
 

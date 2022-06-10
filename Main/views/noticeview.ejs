@@ -15,15 +15,17 @@
     <td>작성일</td>    
 </tr>   
     <%
+        var title = data.title %>
+    <%
     for(var i =0; i<data.length; i++){
         var l = i;
     %>
-    <tr>
-            <li><a href="/contentspage"value="<%= data[l].title %>"> 
-            <%= data[l].title %> 
-            <%= name %> 
-    </tr>        
+            <div>
+                <a href="/contentspage" id="title" name="title"><%= data[l].title %></a>
+            </div>
+           
     <%}%>
+
     <br>
     <br>
     <br>

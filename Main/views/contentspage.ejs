@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
-<title>게시판</title>
+<title>게시글</title>
  
 </head>
 <body>
-        <h4>게시글 작성</h4>
+        <h4>게시글 페이지</h4>
             <div id="write_area">
-                <form action="insert" method="post">
                     <div id="in_title">
-                           <h4><%=data[0].title%></h4>
+                           <h4><%=data.title%></h4>
                     </div>
                     <div class="wi_line"></div>
                     <div id="in_content">
-                        <h4><%=data[0].contents%></h4>
+                        <h4><%=data.contents%></h4>
                     </div>
                     <div class="bt_se">
                         <input type="submit">
                         <input type="button" value="목록" onclick="location.href='/'">
-                        </form>
                     </div>
                 </form>
             </div>
