@@ -1,26 +1,36 @@
 <!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
-<title>게시글</title>
+<title>内容</title>
  
 </head>
 <body>
-        <h4>게시글 페이지</h4>
+    <form method = "post" action="update">
+        <h1>掲示板内容</h1>
             <div id="write_area">
-                    <div id="in_title">
-                           <h4><%=data.title%></h4>
-                    </div>
-                    <div class="wi_line"></div>
-                    <div id="in_content">
-                        <h4><%=data.contents%></h4>
-                    </div>
-                    <div class="bt_se">
-                        <input type="submit">
-                        <input type="button" value="목록" onclick="location.href='/'">
-                    </div>
-                </form>
-            </div>
+
+                <% for(let i = 0; i<100; i++) { %>
+
+                <% }%> 
+                       
+
+
+                    Board_num: <input type="text" value="<%=board_num %>" name="board_num" id="board_num" >
+                </div>    
+                <div id="in_title">
+                    Title: <input type="text" value="<%=title %>" name="title" id="title">
+                </div>
+                <div class="wi_line"></div>
+                <div id="in_content">
+                    Contents: <input type="text" placeholder="<%=contents %>" name="contents" id="contents">
+                </div>
+                <br>
+                <br>
+                <input type="submit" value="修正">
+                <input type="button" value="目録" onclick="location.href='/noticeview'">
+            </form>
         </div>
+    </div>
     </body>
 </html>
  

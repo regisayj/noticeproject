@@ -44,7 +44,7 @@ app.listen(3005,()=>{
 });
 
 app.get('/',(req,res)=>{
-    console.log('메인페이지 작동');
+    console.log('メインページ起動');
     
     //로그인이 되있다면 name을 세션유지 시키는 코딩
     if(req.session.is_logined == true){
@@ -62,14 +62,14 @@ app.get('/',(req,res)=>{
 
 app.get('/register',(req,res)=>{
 
-    console.log('회원가입 페이지')
+    console.log('新規登録 ページ')
     res.render('register');
 
 });
 
 app.post('/register',(req,res)=>{
 
-    console.log('회원가입중')
+    console.log('新規登録中')
     const body = req.body;
     const id = body.id;
     const password = body.password;
@@ -84,7 +84,7 @@ app.post('/register',(req,res)=>{
 
     client.query('select * from notice.user where id=?',[id],(err,data) =>{
         if(data.length == 0){
-            console.log('회원가입 성공');
+            console.log('新規登録完了');
             client.query('insert into notice.user(name, id, password, email) values(?,?,?,?)',[
                 name, id, password, email
             ]);
@@ -96,32 +96,35 @@ app.post('/register',(req,res)=>{
 })
 
 app.get('/login',(req,res)=>{
-    console.log('로그인 페이지');
+    console.log('ログインページ');
     res.render('login');
 });
 
 app.post('/login',(req,res)=>{
     const body = req.body;
     const id = body.id;
-    const pw = body.pw;
+    const password = body.password;
+    const name = body.name;
     const email = body.email;
 
     client.query('select * from notice.user where id=?',[id],(err,data)=>{
         // 로그인 확인
         console.log("data[0]:"+data[0]);
         console.log("data[0].id:"+data[0].id);
+        console.log("data[0].pw:"+data[0].password);
         console.log("data[0].name:"+data[0].name);
         console.log("data[0].email:"+data[0].email);
 
-        if(id == data[0].id || pw == data[0].pw){
-            console.log('로그인 성공');
+        if(id == data[0].id || password == data[0].password){
+            console.log('ログイン成功');
             // 세션에 추가
             req.session.is_logined = true;
             req.session.name = data.name;
             req.session.id = data.id;
-            req.session.pw = data.pw;
+            req.session.password = data.password;
             req.session.email = data.email;
-            req.session.save(function(){ // 세션 스토어에 적용하는 작업
+
+            req.session.save(function login(){ // 세션 스토어에 적용하는 작업
                 res.render('index',{ // 정보전달
                     name : data[0].name,
                     id : data[0].id,
@@ -131,58 +134,58 @@ app.post('/login',(req,res)=>{
             });
 
         }else{
-            console.log('로그인 실패');
-            res.redirect('/');
+            console.log('ログイン失敗');
             
+            res.redirect('index');
         }
+        
     });
     
 });
 
 app.get('/logout',(req,res)=>{
-    console.log('로그아웃 성공');
+    console.log('ログアウト');
     req.session.destroy(function(err){
         // 세션 파괴후 할 것들
         res.redirect('/');
     });
-
 });
 
-//게시글 조회
+//게시판 조회
 app.get('/noticeview',(req,res)=>{
     
-    console.log('게시판 조회');
+    console.log('掲示板表示');
     const body = req.body;
+    const board_num = req.board_num;
     const title = body.title;
     const contents = body.contents;
+    const name = body.name;
 
-    client.query('select * from notice.insert',(err,data) =>{
+    console.log(name);
 
-        req.session.name = data.name;
+    client.query('select * from notice.insert where board_num',(err,data) =>{
+
+        req.session.board_num = data.board_num;
         req.session.title = data.title;
         req.session.contents = data.contents;
         req.session.regdate = data.regdate;
         req.session.data = data;
 
-        req.session.save(function(){ // 세션 스토어에 적용하는 작업
+        req.session.save(function (){ // 세션 스토어에 적용하는 작업
             res.render('noticeview',{ // 정보전달
+                board_num : data.board_num,
                 title : data.title,
                 contents : data.contents,
                 regdata : data.regdate,
-                name : data.name,
                 data : data
             });
-            
             console.log(data);
-
             })
-            
-            
         })
     })
 
 app.get('/write',(req,res)=>{
-    console.log('게시글작성 페이지');
+    console.log('掲示板作成ページ');
     console.log(req.get);
     res.render('write');
     
@@ -191,7 +194,7 @@ app.get('/write',(req,res)=>{
 //게시글 작성
 app.post('/insert',(req,res)=>{
     
-    console.log('게시글 작성중')
+    console.log('内容作成中')
     const body = req.body;
     const title = body.title;
     const contents = body.contents;
@@ -203,7 +206,7 @@ app.post('/insert',(req,res)=>{
 
     client.query('select * from notice.insert where title=?',[title],(err,data) =>{
         if(data.length == 0){
-            console.log('게시글 작성 완료');
+            console.log('作成完了');
             client.query('insert into notice.insert(title, contents, writer) values(?,?,?)',[
                 title, contents, writer
             ]);
@@ -216,40 +219,63 @@ app.post('/insert',(req,res)=>{
 
 app.get('/contentspage',(req,res)=>{
 
-    console.log('게시글 조회');
+    console.log('内容物照会');
 
     const body = req.body;
+    const board_num = req.board_num;
     const title = body.title;
     const contents = body.contents;
     const writer = body.writer;
 
-    console.log(title);
-    console.log(contents);
+    client.query('select * from notice.insert',(err,data) =>{
 
-    client.query('select * from notice.insert where title=?',[title],(err,data) =>{
-
-        req.session.title = data.title;
-        req.session.contents = data.contents;
-        req.session.regdate = data.regdate;
-        req.session.data = data;
-
-        req.session.save(function(){ // 세션 스토어에 적용하는 작업
-            res.render('contentspage',{ // 정보전달
-                title : data.title,
-                contents : data.contents,
-                regdata : data.regdate,
-                data : data
-            });
+        req.session.board_num = data[0].board_num;
+        req.session.title = data[0].title;
+        req.session.contents = data[0].contents;
+        req.session.writer = data[0].writer;
+        req.session.regdate = data[0].regdate;
+        req.session.data = data[0];
+        console.log("req.sessiopn.data:"+req.session.title);
             
-            console.log(data);
-
+            req.session.save(function(){ // 세션 스토어에 적용하는 작업
+                res.render('contentspage',{ // 정보전달
+                    board_num : data[0].board_num,
+                    title : data[0].title,
+                    contents : data[0].contents,
+                    writer : data[0].writer,
+                    regdata : data[0].regdate,
+                    data : data[0]
+                });
             })     
+
+
         })
-
-
 });
 
+app.post('/update',(req,res)=>{
 
+    console.log('内容修正中');
+    const body = req.body;
+    const board_num = body.board_num;
+    const title = body.title;
+    const contents = body.contents;
+
+    console.log(title);
+    console.log(contents);
+    console.log(board_num);
+
+    client.query('UPDATE notice.insert SET title=?, contents=? WHERE board_num = ?', [title, contents, board_num], function (error, results, fields) {
+
+
+        if (error) throw error;
+
+        console.log('修正完了')
+
+      });
+
+    res.redirect('/noticeview');
+
+})
 
 
 
