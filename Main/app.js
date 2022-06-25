@@ -119,15 +119,12 @@ app.post('/login',(req,res)=>{
 
             console.log('ログイン成功');
 
-                req.session.title = data.title;
-                req.session.contents = data.contents;
-                req.session.writer = data.writer;
                 // 세션에 추가
                 req.session.is_logined = true;
-                req.session.name = data.name;
-                req.session.id = data.id;
-                req.session.password = data.password;
-                req.session.email = data.email;
+                req.session.name = data[0].name;
+                req.session.id = data[0].id;
+                req.session.password = data[0].password;
+                req.session.email = data[0].email;
                 
                 req.session.save(function login(){ // 세션 스토어에 적용하는 작업
                     res.render('index',{ // 정보전달
@@ -182,7 +179,7 @@ app.get('/noticeview',(req,res)=>{
                 title : data[0].title,
                 contents : data[0].contents,
                 regdata : data[0].regdate,
-                data : data[0],
+                data : data,
                 writer : data[0].writer
             });
             })
@@ -260,7 +257,7 @@ app.get('/contentspage',(req,res)=>{
         })
 });
 
-app.get('/update',(req,res)=>{
+app.post('/update',(req,res)=>{
 
     console.log('内容修正中');
     const body = req.body;
@@ -283,7 +280,7 @@ app.get('/update',(req,res)=>{
     res.redirect('/noticeview');
 
 })
-app.get('/delete',(req,res)=>{
+app.post('/delete',(req,res)=>{
 
     console.log('削除中');
     const body = req.body;

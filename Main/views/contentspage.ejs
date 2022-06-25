@@ -4,6 +4,8 @@
 <title>内容</title>
 </head>
 <body>
+
+
     <form method = "post" action="update">
         <h1>掲示板内容</h1>
                     Board_num: <input type="text" value="<%=board_num %>" name="board_num" id="board_num" >
@@ -13,8 +15,8 @@
                     Contents: <input type="text" placeholder="<%=contents %>" name="contents" id="contents">
                     <br>
                     <br>
-                    <input type="submit" value="修正" onclick="location.href='/update'">
-                    <input type="submit" value="削除" onclick="location.href='/delete'">
+                    <input type="submit" name="action" value="修正"/>
+                    <input type="submit" value="削除" formaction="delete">
                     <br>
                     <br>
                     <input type="button" value="目録" onclick="location.href='/noticeview'">

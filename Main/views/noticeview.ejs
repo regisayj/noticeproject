@@ -12,15 +12,17 @@
     <td>タイトル</td>
     <td>作成者</td>
     <td>作成日</td>    
-</tr>   <%for(let i = 0; i<10; i++) {%>
-            <div>
-                <li>
-                <a href="/contentspage" id="board_num" name="board_num" value=""><%= data.board_num %></a>
-                <a href="/contentspage" id="title" name="title"><%= data.title %></a>
-                <a href="/contentspage" id="writer" name="writer"><%= writer %></a>
-            </li>
-            </div>
-            <%}%>
+</tr>   
+<%for (let i = 0; i<data.length; i++){%>
+    <div>
+        <li>
+            <a href="/contentspage" id="board_num" name="board_num" value=""><%= data[i].board_num %></a>
+            <a href="/contentspage" id="title" name="title"><%= data[i].title %></a>
+            <a href="/contentspage" id="writer" name="writer"><%= data[i].writer %></a>
+        </li>
+    </div>
+    <% }%>
+            
            
     <br>
     <br>
