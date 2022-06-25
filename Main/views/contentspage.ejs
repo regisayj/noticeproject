@@ -2,35 +2,24 @@
 <head>
 <meta charset="UTF-8">
 <title>内容</title>
- 
 </head>
 <body>
     <form method = "post" action="update">
         <h1>掲示板内容</h1>
-            <div id="write_area">
-
-                <% for(let i = 0; i<100; i++) { %>
-
-                <% }%> 
-                       
-
-
                     Board_num: <input type="text" value="<%=board_num %>" name="board_num" id="board_num" >
-                </div>    
-                <div id="in_title">
+                    <br>
                     Title: <input type="text" value="<%=title %>" name="title" id="title">
-                </div>
-                <div class="wi_line"></div>
-                <div id="in_content">
+                    <br>
                     Contents: <input type="text" placeholder="<%=contents %>" name="contents" id="contents">
-                </div>
-                <br>
-                <br>
-                <input type="submit" value="修正">
-                <input type="button" value="目録" onclick="location.href='/noticeview'">
+                    <br>
+                    <br>
+                    <input type="submit" value="修正" onclick="location.href='/update'">
+                    <input type="submit" value="削除" onclick="location.href='/delete'">
+                    <br>
+                    <br>
+                    <input type="button" value="目録" onclick="location.href='/noticeview'">
             </form>
-        </div>
-    </div>
+            <br>
     </body>
 </html>
  

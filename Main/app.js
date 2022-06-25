@@ -116,30 +116,35 @@ app.post('/login',(req,res)=>{
         console.log("data[0].email:"+data[0].email);
 
         if(id == data[0].id || password == data[0].password){
+
             console.log('ログイン成功');
-            // 세션에 추가
-            req.session.is_logined = true;
-            req.session.name = data.name;
-            req.session.id = data.id;
-            req.session.password = data.password;
-            req.session.email = data.email;
 
-            req.session.save(function login(){ // 세션 스토어에 적용하는 작업
-                res.render('index',{ // 정보전달
-                    name : data[0].name,
-                    id : data[0].id,
-                    email : data[0].email,
-                    is_logined : true
+                req.session.title = data.title;
+                req.session.contents = data.contents;
+                req.session.writer = data.writer;
+                // 세션에 추가
+                req.session.is_logined = true;
+                req.session.name = data.name;
+                req.session.id = data.id;
+                req.session.password = data.password;
+                req.session.email = data.email;
+                
+                req.session.save(function login(){ // 세션 스토어에 적용하는 작업
+                    res.render('index',{ // 정보전달
+                        name : data[0].name,
+                        id : data[0].id,
+                        email : data[0].email,
+                        is_logined : true,
+                    });
                 });
-            });
-
-        }else{
-            console.log('ログイン失敗');
+                
+            }else{
+                console.log('ログイン失敗');
+                
+                res.redirect('index');
+            }
             
-            res.redirect('index');
-        }
-        
-    });
+        });
     
 });
 
@@ -160,8 +165,7 @@ app.get('/noticeview',(req,res)=>{
     const title = body.title;
     const contents = body.contents;
     const name = body.name;
-
-    console.log(name);
+    const writer = body.writer;
 
     client.query('select * from notice.insert where board_num',(err,data) =>{
 
@@ -170,17 +174,21 @@ app.get('/noticeview',(req,res)=>{
         req.session.contents = data.contents;
         req.session.regdate = data.regdate;
         req.session.data = data;
+        req.session.writer = writer;
 
         req.session.save(function (){ // 세션 스토어에 적용하는 작업
             res.render('noticeview',{ // 정보전달
-                board_num : data.board_num,
-                title : data.title,
-                contents : data.contents,
-                regdata : data.regdate,
-                data : data
+                board_num : data[0].board_num,
+                title : data[0].title,
+                contents : data[0].contents,
+                regdata : data[0].regdate,
+                data : data[0],
+                writer : data[0].writer
             });
-            console.log(data);
             })
+
+
+
         })
     })
 
@@ -235,7 +243,7 @@ app.get('/contentspage',(req,res)=>{
         req.session.writer = data[0].writer;
         req.session.regdate = data[0].regdate;
         req.session.data = data[0];
-        console.log("req.sessiopn.data:"+req.session.title);
+        console.log("req.session.data:"+req.session.title);
             
             req.session.save(function(){ // 세션 스토어에 적용하는 작업
                 res.render('contentspage',{ // 정보전달
@@ -252,7 +260,7 @@ app.get('/contentspage',(req,res)=>{
         })
 });
 
-app.post('/update',(req,res)=>{
+app.get('/update',(req,res)=>{
 
     console.log('内容修正中');
     const body = req.body;
@@ -260,16 +268,37 @@ app.post('/update',(req,res)=>{
     const title = body.title;
     const contents = body.contents;
 
-    console.log(title);
-    console.log(contents);
-    console.log(board_num);
-
     client.query('UPDATE notice.insert SET title=?, contents=? WHERE board_num = ?', [title, contents, board_num], function (error, results, fields) {
 
+        console.log(body.title);
+        console.log(body.contents);
+        console.log(body.board_num);
 
         if (error) throw error;
 
         console.log('修正完了')
+
+      });
+
+    res.redirect('/noticeview');
+
+})
+app.get('/delete',(req,res)=>{
+
+    console.log('削除中');
+    const body = req.body;
+    const board_num = body.board_num;
+    const title = body.title;
+    const contents = body.contents;
+
+
+    client.query('DELETE FROM notice.insert where board_num = ?', [board_num], function (error, results, fields) {
+
+        console.log(body.board_num);
+
+        if (error) throw error;
+
+        console.log('削除完了')
 
       });
 

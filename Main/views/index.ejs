@@ -24,8 +24,7 @@
                     <li><a href="/login">login</a></li>
                     <li><a href="/register">register</a></li>  
                 <% }else{ %>
-                    <li id="name" name="name" value="<%= name %>"></li>
-                    <input type="text" value="<%= name %>">
+                    <li><%= name %> 様、ようこそ</li>
                     <li><a href="/logout">logout</a></li>  
                 <% } %>
                 </ul>
