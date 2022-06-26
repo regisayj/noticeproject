@@ -5,8 +5,8 @@
  
 </head>
 <body>
-        <h4>内容 作成</h4>
-            <div id="write_area">
+    <h4>内容 作成</h4>
+    <div id="write_area">
                 <form action="insert" method="post">
                     <div id="in_title">
                         <textarea name="title" id="title" rows="1" cols="55" placeholder="タイトル" maxlength="100" required></textarea>
@@ -15,15 +15,20 @@
                     <div id="in_content">
                         <textarea name="contents" id="contents" placeholder="内容" required></textarea>
                     </div>
+                    <% if(is_logined == true){ %>
                     <div id="in_content">
-                        <textarea name="writer" id="writer" placeholder="作成者" value="" required></textarea>
+                        <textarea name="writer" id="writer" placeholder="作成者" value="<%= name %>" readonly><%=name%></textarea>
                     </div>
+                    <% } else {%>
+                    <div id="in_content">
+                        <textarea name="writer" id="writer" placeholder="作成者"></textarea>
+                    </div>
+                    <% } %>
                     <div class="bt_se">
                         <input type="submit">
-                        <input type="button" value="目録" onclick="location.href='/'">
+                        <input type="button" value="目録" onclick="location.href='/noticeview'">
                         </form>
                     </div>
-                </form>
             </div>
         </div>
     </body>

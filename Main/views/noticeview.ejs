@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>掲示板</h1>
-<tr>
+    <td>番号</td>
     <td>タイトル</td>
     <td>作成者</td>
     <td>作成日</td>    
@@ -16,22 +16,17 @@
 <%for (let i = 0; i<data.length; i++){%>
     <div>
         <li>
-            <a href="/contentspage" id="board_num" name="board_num" value=""><%= data[i].board_num %></a>
-            <a href="/contentspage" id="title" name="title"><%= data[i].title %></a>
-            <a href="/contentspage" id="writer" name="writer"><%= data[i].writer %></a>
+            <a id="board_num" name="board_num" value="<%= data[i].board_num %>"><%= data[i].board_num %></a> |
+            <a href="/contentspage" id="title" name="title"><%= data[i].title %></a> |
+            <a id="writer" name="writer"><%= data[i].writer %></a> |
+            <a id="regdate" name="regdate"><%= data[i].regdate %></a>
         </li>
     </div>
     <% }%>
-            
-           
     <br>
     <br>
     <br>
-    <a href="/">目録</a>
+    <a href="/">メインページ</a>
     <a href="/write">作成</a>
-
-
-
-    
 </body>
 </html>
