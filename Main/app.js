@@ -42,11 +42,13 @@ app.use(session({
 app.listen(3010,()=>{
     console.log('3010 port running...');
 });
-
+// メインページ
 app.get('/',(req,res)=>{
     console.log('メインページ起動');
     
     //로그인이 되있다면 name을 세션유지 시키는 코딩
+    //ログインできているならnameをセッション維持させるコーデイング
+
     if(req.session.is_logined == true){
         res.render('index',{
             is_logined : req.session.is_logined,
@@ -92,7 +94,7 @@ app.get('/login',(req,res)=>{
     console.log('ログインページ');
     res.render('login');
 });
-
+// ログイン
 app.post('/login',(req,res)=>{
     const body = req.body;
     const id = body.id;
@@ -112,15 +114,15 @@ app.post('/login',(req,res)=>{
 
             console.log('ログイン成功');
 
-                // 세션에 추가
+                // セッションに追加
                 req.session.is_logined = true;
                 req.session.name = data[0].name;
                 req.session.id = data[0].id;
                 req.session.password = data[0].password;
                 req.session.email = data[0].email;
                 
-                req.session.save(function login(){ // 세션 스토어에 적용하는 작업
-                    res.render('index',{ // 정보전달
+                req.session.save(function login(){ //セッションストアーに適用する作業
+                    res.render('index',{ // 情報伝達
                         name : data[0].name,
                         id : data[0].id,
                         email : data[0].email,
@@ -141,11 +143,12 @@ app.post('/login',(req,res)=>{
 app.get('/logout',(req,res)=>{
     console.log('ログアウト');
     req.session.destroy(function(err){
-        // 세션 파괴후 할 것들
+        // セッション破壊
         res.redirect('/');
     });
 });
 
+// 作成ページへ
 app.get('/write',(req,res)=>{
     console.log('掲示板作成ページ');
     console.log(req.session.name);
@@ -164,7 +167,7 @@ app.get('/write',(req,res)=>{
     
 });
 
-//게시글 작성
+//投稿作成
 app.post('/insert',(req,res)=>{
     
     console.log('内容作成中')
@@ -190,7 +193,7 @@ app.post('/insert',(req,res)=>{
     })
 })
 
-//게시판 조회
+//掲示板表示
 app.get('/noticeview',(req,res)=>{
     
     console.log('掲示板表示');
@@ -202,7 +205,9 @@ app.get('/noticeview',(req,res)=>{
     const writer = body.writer;
     const regdate = body.regdate;
 
+
     client.query('select * from notice.insert',(err,data) =>{
+
 
         req.session.board_num = data[0].board_num;
         req.session.title = data.title;
@@ -211,7 +216,7 @@ app.get('/noticeview',(req,res)=>{
         req.session.data = data;
         req.session.writer = writer;
 
-        console.log(data[0].board_num);
+        console.log(data.board_num);
 
         req.session.save(function (){ // 세션 스토어에 적용하는 작업
             res.render('noticeview',{ // 정보전달
@@ -223,17 +228,18 @@ app.get('/noticeview',(req,res)=>{
                 data : data
             });
             })
+        
         })
     })
-//내용물 조회
+
+
+//内容物照会
 app.get('/contentspage',(req,res)=>{
 
     console.log('内容物照会');
 
-    const body = req.body;
     const board_num = req.session.board_num;
     console.log(board_num);
-
     client.query('select * from notice.insert where board_num = ?',[board_num],(err,data) =>{
 
         req.session.board_num = data[0].board_num;
@@ -257,7 +263,7 @@ app.get('/contentspage',(req,res)=>{
 
         })
 });
-
+// 修正
 app.post('/update',(req,res)=>{
 
     console.log('内容修正中');
@@ -281,6 +287,7 @@ app.post('/update',(req,res)=>{
     res.redirect('/noticeview');
 
 })
+// 削除
 app.post('/delete',(req,res)=>{
 
     console.log('削除中');
