@@ -14,7 +14,8 @@
     <td>作成日</td>    
 </tr>   
 <%for (let i = 0; i<data.length; i++){%>
-<% let board_num = data[i].board_num; %>    
+<% let board_num = data[i].board_num; %>
+<form method="post">
     <div>
         <li>
             <a id="board_num" name="board_num" value="<%= data[i].board_num %>" ><%= data[i].board_num %></a> |
@@ -23,6 +24,7 @@
             <a id="regdate" name="regdate"><%= data[i].regdate %></a>
         </li>
     </div>
+</form>
     <% }%>
     <br>
     <br>
